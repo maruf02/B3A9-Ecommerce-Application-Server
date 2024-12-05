@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/globalErrorHandler";
 import { userRoutes } from "./app/modules/Users/user.route";
+import { AuthRoutes } from "./app/modules/Auth/auth.route";
 // import { bookRoutes } from "./app/modules/Books/books.route";
 // import { memberRoutes } from "./app/modules/members/members.route";
 // import { borrowReturnRoutes } from "./app/modules/BRBooks/BRBooks.route";
@@ -30,7 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // all apis
-// app.use("/api", bookRoutes);
+app.use("/api", AuthRoutes);
 app.use("/api", userRoutes);
 // app.use("/api", borrowReturnRoutes);
 
