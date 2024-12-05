@@ -15,14 +15,25 @@ datasource db {
 
 
 
-model Member {
-  memberId        String   @id @default(uuid())
-  name            String
-  email           String   @unique
-  phone           String
-  membershipDate  DateTime @default(now())
+model User {
+  userId    String   @id @default(uuid())  
+  name      String
+  email     String   @unique  
+  image     String?   
+  role      Role      
+  isBlock   String   @default("No")  
+  isDeleted Boolean  @default(false)  
+  password  String
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt  
 
+  @@map("users")
+}
 
-
-  @@map("members")
+enum Role {
+  USER
+  ADMIN
+  VENDOR
 }

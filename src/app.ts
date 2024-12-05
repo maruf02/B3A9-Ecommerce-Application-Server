@@ -3,6 +3,7 @@ import cors from "cors";
 // import router from "./app/routes";
 import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/globalErrorHandler";
+import { userRoutes } from "./app/modules/Users/user.route";
 // import { bookRoutes } from "./app/modules/Books/books.route";
 // import { memberRoutes } from "./app/modules/members/members.route";
 // import { borrowReturnRoutes } from "./app/modules/BRBooks/BRBooks.route";
@@ -10,7 +11,18 @@ import globalErrorHandler from "./app/globalErrorHandler";
 // import globalErrorHandler from "./app/globalErrorHandler";
 
 const app: Application = express();
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "https://car-rental-project-kappa.vercel.app",
+      "*",
+    ],
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 
 //parser
@@ -19,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // all apis
 // app.use("/api", bookRoutes);
-// app.use("/api", memberRoutes);
+app.use("/api", userRoutes);
 // app.use("/api", borrowReturnRoutes);
 
 app.get("/", (req: Request, res: Response) => {
