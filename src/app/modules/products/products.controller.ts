@@ -72,9 +72,10 @@ const getProductByShopName = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateProduct = catchAsync(async (req: Request, res: Response) => {
-  const { ProductId } = req.params;
+  const { productId } = req.params;
   const updateData = req.body;
-  const result = await ProductService.updateProduct(ProductId, updateData);
+  console.log(productId, updateData);
+  const result = await ProductService.updateProduct(productId, updateData);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
