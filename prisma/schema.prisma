@@ -57,7 +57,7 @@ model ShopName {
 
   user      User     @relation(fields: [userId], references: [userId])
 
-product Product[]
+productData ProductData[]
 
 
   @@map("shop_name")
@@ -72,7 +72,34 @@ model Product {
   quantity Int
   image     String?
   discount   String   @default("No")
-  discountPrice Float
+  discountPrice Float?
+  isFlashSale String   @default("No")
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt  
+
+  vendorId    String
+
+   
+
+  @@map("products")
+}
+model ProductData {
+  productId  String   @id @default(uuid())  
+  shopNameM  String
+  email     String  
+  name String
+  price Float
+  category String
+  description String
+  quantity Int
+  mimage     String?
+  image2     String?
+  image3     String?
+  image4     String?
+  image5     String?
+  discount   String   @default("No")
+  discountPrice Float?
   isFlashSale String   @default("No")
   isDeleted Boolean  @default(false)
   createdAt DateTime @default(now())  
@@ -82,7 +109,7 @@ model Product {
 
   shopName      ShopName     @relation(fields: [vendorId], references: [vendorId])
 
-  @@map("products")
+  @@map("products_data")
 }
 
 

@@ -9,8 +9,13 @@ const createProduct = async (user: any, productData: any) => {
     name,
     price,
     category,
+    description,
     quantity,
-    image,
+    mimage,
+    image2,
+    image3,
+    image4,
+    image5,
     discount,
     discountPrice,
     isFlashSale,
@@ -32,15 +37,20 @@ const createProduct = async (user: any, productData: any) => {
   const shopNameM = shop.shopName;
 
   // Create a new product
-  return await prisma.product.create({
+  return await prisma.productData.create({
     data: {
       shopNameM,
       email,
       name,
       price,
       category,
+      description,
       quantity,
-      image,
+      mimage,
+      image2,
+      image3,
+      image4,
+      image5,
       discount,
       discountPrice,
       isFlashSale,
@@ -50,7 +60,7 @@ const createProduct = async (user: any, productData: any) => {
 };
 
 const getAllProducts = async () => {
-  const result = await prisma.product.findMany({
+  const result = await prisma.productData.findMany({
     where: { isDeleted: false },
     include: { shopName: true },
   });
@@ -58,8 +68,8 @@ const getAllProducts = async () => {
 };
 
 const getProductById = async (productId: string) => {
-  const result = await prisma.product.findUnique({
-    where: { productsId: productId },
+  const result = await prisma.productData.findUnique({
+    where: { productId },
     include: { shopName: true },
   });
 
@@ -79,7 +89,7 @@ const getProductByEmail = async (email: string) => {
     throw new AppError(StatusCodes.NOT_FOUND, "Shop not found");
   }
 
-  const result = await prisma.product.findMany({
+  const result = await prisma.productData.findMany({
     where: {
       vendorId: shop.vendorId,
       isDeleted: false,
@@ -90,16 +100,16 @@ const getProductByEmail = async (email: string) => {
 };
 
 const updateProduct = async (productId: string, updateData: any) => {
-  const product = await prisma.product.findUnique({
-    where: { productsId: productId },
+  const product = await prisma.productData.findUnique({
+    where: { productId },
   });
 
   if (!product || product.isDeleted) {
     throw new AppError(StatusCodes.NOT_FOUND, "Product not found");
   }
 
-  const result = await prisma.product.update({
-    where: { productsId: productId },
+  const result = await prisma.productData.update({
+    where: { productId },
     data: updateData,
   });
 
@@ -107,16 +117,16 @@ const updateProduct = async (productId: string, updateData: any) => {
 };
 
 const deleteProduct = async (productId: string) => {
-  const product = await prisma.product.findUnique({
-    where: { productsId: productId },
+  const product = await prisma.productData.findUnique({
+    where: { productId },
   });
 
   if (!product || product.isDeleted) {
     throw new AppError(StatusCodes.NOT_FOUND, "Product not found");
   }
 
-  await prisma.product.update({
-    where: { productsId: productId },
+  await prisma.productData.update({
+    where: { productId },
     data: { isDeleted: true },
   });
 };
