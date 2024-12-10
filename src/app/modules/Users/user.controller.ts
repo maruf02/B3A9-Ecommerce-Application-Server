@@ -1,94 +1,97 @@
 import { Request, Response } from "express";
 import { userService } from "./user.service";
+import sendResponse from "../../helpers/sendResponse";
+import { StatusCodes } from "http-status-codes";
+import catchAsync from "../../helpers/cacheAsync";
 
-const createUser = async (req: Request, res: Response) => {
+const createUser = catchAsync(async (req: Request, res: Response) => {
   const userData = req.body;
-  try {
-    const result = await userService.createUser(userData);
-    res.status(201).send({
-      success: true,
-      status: 201,
-      message: "User created successfully",
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(400).send({
-      success: false,
-      status: 400,
-      message: error.message || "Failed to create user",
-    });
-  }
-};
 
-const getAllUsers = async (req: Request, res: Response) => {
-  const result = await userService.getAllUsers();
-  res.status(200).send({
+  const result = await userService.createUser(userData);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.CREATED,
     success: true,
-    status: 200,
+    message: "User created successfully",
+    data: result,
+  });
+});
+
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getAllUsers();
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
     message: "Users retrieved successfully",
     data: result,
   });
-};
+});
 
-const getUserById = async (req: Request, res: Response) => {
+const getUserById = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.params;
   const result = await userService.getUserById(userId);
   if (!result || result.isDeleted) {
-    res.status(404).send({
-      success: false,
-      status: 404,
+    sendResponse(res, {
+      statusCode: StatusCodes.NOT_FOUND,
+      success: true,
       message: "User not found",
+      data: result,
     });
+
     return;
   }
-  res.status(200).send({
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
     success: true,
-    status: 200,
-    message: "User retrieved successfully",
+    message: "Users retrieved successfully",
     data: result,
   });
-};
+});
 
-const getUserByEmail = async (req: Request, res: Response) => {
+const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
   const { email } = req.params;
   const result = await userService.getUserByEmail(email);
   if (!result || result.isDeleted) {
-    res.status(404).send({
-      success: false,
-      status: 404,
+    sendResponse(res, {
+      statusCode: StatusCodes.NOT_FOUND,
+      success: true,
       message: "User not found",
+      data: result,
     });
     return;
   }
-  res.status(200).send({
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
     success: true,
-    status: 200,
-    message: "User retrieved successfully",
+    message: "Users retrieved successfully",
     data: result,
   });
-};
+});
 
-const updateUser = async (req: Request, res: Response) => {
+const updateUser = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.params;
   const updateData = req.body;
   const result = await userService.updateUser(userId, updateData);
-  res.status(200).send({
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
     success: true,
-    status: 200,
     message: "User updated successfully",
     data: result,
   });
-};
+});
 
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.params;
   await userService.deleteUser(userId);
-  res.status(200).send({
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
     success: true,
-    status: 200,
     message: "User successfully deleted",
+    data: null,
   });
-};
+});
 
 export const userController = {
   createUser,

@@ -3,6 +3,8 @@ import { jwtHelpers } from "../../helpers/jwtHelpers";
 import * as bcrypt from "bcrypt";
 import config from "../../config";
 import { Secret } from "jsonwebtoken";
+import { StatusCodes } from "http-status-codes";
+import AppError from "../../helpers/AppError";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +17,15 @@ const loginUser = async (payload: { email: string; password: string }) => {
     });
 
     if (!userData) {
-      throw new Error("Email not found");
+      throw new AppError(StatusCodes.NOT_FOUND, "Email not found");
+    }
+
+    if (userData.isBlock === "Yes") {
+      throw new AppError(StatusCodes.FORBIDDEN, "Your account is blocked");
+    }
+
+    if (userData.isDeleted) {
+      throw new AppError(StatusCodes.GONE, "Your account is deleted");
     }
 
     const isCorrectPassword: boolean = await bcrypt.compare(
@@ -24,7 +34,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     );
 
     if (!isCorrectPassword) {
-      throw new Error("Password incorrect");
+      throw new AppError(StatusCodes.UNAUTHORIZED, "Password incorrect");
     }
 
     const accessToken = jwtHelpers.generateToken(
@@ -51,7 +61,10 @@ const loginUser = async (payload: { email: string; password: string }) => {
       refreshToken,
     };
   } catch (error: any) {
-    throw new Error(error.message || "An error occurred during login");
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      error.message || "An error occurred during login"
+    );
   }
 };
 
@@ -68,7 +81,7 @@ const changePassword = async (user: any, payload: any) => {
   );
 
   if (!isCorrectPassword) {
-    throw new Error("Password incorrect!");
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Password incorrect!");
   }
 
   const hashedPassword: string = await bcrypt.hash(payload.newPassword, 12);

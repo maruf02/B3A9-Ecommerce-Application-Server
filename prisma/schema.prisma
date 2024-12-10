@@ -29,6 +29,8 @@ model User {
   createdAt DateTime @default(now())  
   updatedAt DateTime @updatedAt  
 
+shopName ShopName[]
+
   @@map("users")
 }
 
@@ -36,4 +38,71 @@ enum Role {
   USER
   ADMIN
   VENDOR
+}
+
+
+ 
+model ShopName {
+  vendorId  String   @id @default(uuid())  
+  shopName  String
+  email     String   @unique
+  image     String?
+  isBlock   String   @default("No")
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt  
+
+  userId    String
+
+
+  user      User     @relation(fields: [userId], references: [userId])
+
+product Product[]
+
+
+  @@map("shop_name")
+}
+model Product {
+  productsId  String   @id @default(uuid())  
+  shopNameM  String
+  email     String  
+  name String
+  price Float
+  category String
+  quantity Int
+  image     String?
+  discount   String   @default("No")
+  discountPrice Float
+  isFlashSale String   @default("No")
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt  
+
+  vendorId    String
+
+  shopName      ShopName     @relation(fields: [vendorId], references: [vendorId])
+
+  @@map("products")
+}
+
+
+model Category{
+  CategoryId String   @id @default(uuid())  
+  CategoryName String
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt  
+
+  @@map("category")
+
+}
+
+
+model LoginActivity{
+  loginActivityId String @id @default(uuid())  
+  email String
+  loginAt String
+  device String
+
+  @@map("Login_activity")
 }

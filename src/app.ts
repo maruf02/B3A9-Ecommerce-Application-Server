@@ -5,6 +5,10 @@ import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/globalErrorHandler";
 import { userRoutes } from "./app/modules/Users/user.route";
 import { AuthRoutes } from "./app/modules/Auth/auth.route";
+import { VendorRoutes } from "./app/modules/Vendor/vendor.route";
+import { ProductRoutes } from "./app/modules/products/products.route";
+import { categoriesRoutes } from "./app/modules/Category/Category.route";
+import { loginActivityRoutes } from "./app/modules/loginActivity/loginActivity.route";
 // import { bookRoutes } from "./app/modules/Books/books.route";
 // import { memberRoutes } from "./app/modules/members/members.route";
 // import { borrowReturnRoutes } from "./app/modules/BRBooks/BRBooks.route";
@@ -33,6 +37,10 @@ app.use(express.urlencoded({ extended: true }));
 // all apis
 app.use("/api", AuthRoutes);
 app.use("/api", userRoutes);
+app.use("/api", VendorRoutes);
+app.use("/api", ProductRoutes);
+app.use("/api", categoriesRoutes);
+app.use("/api", loginActivityRoutes);
 // app.use("/api", borrowReturnRoutes);
 
 app.get("/", (req: Request, res: Response) => {

@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { AuthServices } from "./auth.service";
+import sendResponse from "../../helpers/sendResponse";
+import { StatusCodes } from "http-status-codes";
+import catchAsync from "../../helpers/cacheAsync";
 
-const loginUser = async (req: Request, res: Response) => {
+const loginUser = catchAsync(async (req: Request, res: Response) => {
   try {
     const result = await AuthServices.loginUser(req.body);
 
@@ -12,9 +15,9 @@ const loginUser = async (req: Request, res: Response) => {
       httpOnly: true,
     });
 
-    res.status(200).send({
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
       success: true,
-      status: 200,
       message: "Logged in successfully!",
       data: {
         accessToken: result.accessToken,
@@ -22,48 +25,69 @@ const loginUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     if (error.message === "Email not found") {
-      res.status(404).send({
-        success: false,
-        status: 404,
+      sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
         message: "Email incorrect",
+        data: null,
       });
     } else if (error.message === "Password incorrect") {
-      res.status(401).send({
-        success: false,
-        status: 401,
+      sendResponse(res, {
+        statusCode: StatusCodes.UNAUTHORIZED,
+        success: true,
         message: "Password not match",
+        data: null,
+      });
+    } else if (error.message === "Your account is blocked") {
+      sendResponse(res, {
+        statusCode: StatusCodes.UNAUTHORIZED,
+        success: true,
+        message: "Your account is blocked",
+        data: null,
+      });
+    } else if (error.message === "Your account is deleted") {
+      sendResponse(res, {
+        statusCode: StatusCodes.UNAUTHORIZED,
+        success: true,
+        message: "Your account is deleted",
+        data: null,
       });
     } else {
-      res.status(500).send({
-        success: false,
-        status: 500,
+      sendResponse(res, {
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        success: true,
         message: "Internal server error",
+        data: null,
       });
     }
   }
-};
+});
 
-const changePassword = async (req: Request & { user?: any }, res: Response) => {
-  try {
-    const user = req.user;
-    console.log(user);
-    const result = await AuthServices.changePassword(user, req.body);
+const changePassword = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    try {
+      const user = req.user;
+      console.log(user);
+      const result = await AuthServices.changePassword(user, req.body);
 
-    res.status(500).send({
-      success: true,
-      message: "Password Changed successfully",
-      data: result,
-    });
-  } catch (err: any) {
-    if (err.message === "Password incorrect!") {
-      res.status(401).send({
-        success: false,
-        status: 401,
-        message: "Password incorrect",
+      sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Password Changed successfully",
+        data: result,
       });
+    } catch (err: any) {
+      if (err.message === "Password incorrect!") {
+        sendResponse(res, {
+          statusCode: StatusCodes.UNAUTHORIZED,
+          success: true,
+          message: "Password not match",
+          data: null,
+        });
+      }
     }
   }
-};
+);
 
 export const AuthController = {
   loginUser,
