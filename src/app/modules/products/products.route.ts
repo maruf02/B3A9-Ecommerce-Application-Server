@@ -12,6 +12,11 @@ router.get(
   "/productsByShopName/email/:email",
   ProductController.getProductByShopName
 );
+router.get(
+  "/productsByShopName/:vendorId",
+  ProductController.getAllProductsByVendorId
+);
+router.get("/cartProducts/cartItem", ProductController.getProductsByCartIds);
 router.put("/products/:productId", ProductController.updateProduct);
 router.delete("/products/:productId", ProductController.deleteProduct);
 

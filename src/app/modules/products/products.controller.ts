@@ -3,6 +3,9 @@ import sendResponse from "../../helpers/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../helpers/cacheAsync";
 import { ProductService } from "./products.service";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 const createProduct = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
@@ -21,14 +24,46 @@ const createProduct = catchAsync(
 );
 
 const getAllProducts = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProductService.getAllProducts();
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+
+  const result = await ProductService.getAllProducts(page, limit);
+
+  res.status(StatusCodes.OK).json({
     success: true,
     message: "Products retrieved successfully",
-    data: result,
+    data: result.products,
+    meta: {
+      total: result.total,
+      page,
+      limit,
+    },
   });
 });
+
+const getAllProductsByVendorId = catchAsync(
+  async (req: Request, res: Response) => {
+    const { vendorId } = req.params; // Use vendorId from route params
+    const result = await ProductService.getAllProductsByVendorId(vendorId);
+
+    if (!result || result.length === 0) {
+      sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
+        message: "No products found for this shop",
+        data: result,
+      });
+
+      return;
+    }
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Products retrieved successfully",
+      data: result,
+    });
+  }
+);
 
 const getProductById = catchAsync(async (req: Request, res: Response) => {
   const { ProductId } = req.params;
@@ -49,6 +84,53 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
     message: "Products retrieved successfully",
     data: result,
   });
+});
+
+const getProductsByCartIds = catchAsync(async (req: Request, res: Response) => {
+  const { productIds } = req.query;
+
+  if (!productIds || typeof productIds !== "string") {
+    sendResponse(res, {
+      statusCode: StatusCodes.BAD_REQUEST,
+      success: false,
+      message: "Product IDs are required and must be a string",
+      data: null,
+    });
+    return;
+  }
+
+  // Split the string by commas to get an array of product IDs
+  const productIdsArray = productIds.split(",");
+
+  console.log("Received productIds:", productIdsArray); // Debugging line
+
+  try {
+    const result = await ProductService.getProductsByCartIds(productIdsArray);
+
+    if (result.length === 0) {
+      sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
+        message: "No products foundddd",
+        data: result,
+      });
+      return;
+    }
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Products retrieved successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    sendResponse(res, {
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
 });
 
 const getProductByShopName = catchAsync(async (req: Request, res: Response) => {
@@ -104,4 +186,6 @@ export const ProductController = {
   getProductByShopName,
   updateProduct,
   deleteProduct,
+  getAllProductsByVendorId,
+  getProductsByCartIds,
 };
