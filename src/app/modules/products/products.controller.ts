@@ -134,8 +134,10 @@ const getProductsByCartIds = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getProductByShopName = catchAsync(async (req: Request, res: Response) => {
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
   const { email } = req.params;
-  const result = await ProductService.getProductByEmail(email);
+  const result = await ProductService.getProductByEmail(email, page, limit);
   if (!result || result.isDeleted) {
     sendResponse(res, {
       statusCode: StatusCodes.NOT_FOUND,
@@ -145,13 +147,36 @@ const getProductByShopName = catchAsync(async (req: Request, res: Response) => {
     });
     return;
   }
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
+  res.status(StatusCodes.OK).json({
     success: true,
     message: "Products retrieved successfully",
     data: result,
+    meta: {
+      total: result.total,
+      page,
+      limit,
+    },
   });
 });
+// const getProductByShopName = catchAsync(async (req: Request, res: Response) => {
+//   const { email } = req.params;
+//   const result = await ProductService.getProductByEmail(email);
+//   if (!result || result.isDeleted) {
+//     sendResponse(res, {
+//       statusCode: StatusCodes.NOT_FOUND,
+//       success: true,
+//       message: "Product not found",
+//       data: result,
+//     });
+//     return;
+//   }
+//   sendResponse(res, {
+//     statusCode: StatusCodes.OK,
+//     success: true,
+//     message: "Products retrieved successfully",
+//     data: result,
+//   });
+// });
 
 const updateProduct = catchAsync(async (req: Request, res: Response) => {
   const { productId } = req.params;

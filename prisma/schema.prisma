@@ -57,34 +57,14 @@ model ShopName {
 
   user      User     @relation(fields: [userId], references: [userId])
 
-productData ProductData[]
+product Product[]
 
 
   @@map("shop_name")
 }
+
+
 model Product {
-  productsId  String   @id @default(uuid())  
-  shopNameM  String
-  email     String  
-  name String
-  price Float
-  category String
-  quantity Int
-  image     String?
-  discount   String   @default("No")
-  discountPrice Float?
-  isFlashSale String   @default("No")
-  isDeleted Boolean  @default(false)
-  createdAt DateTime @default(now())  
-  updatedAt DateTime @updatedAt  
-
-  vendorId    String
-
-   
-
-  @@map("products")
-}
-model ProductData {
   productId  String   @id @default(uuid())  
   shopNameM  String
   email     String  
@@ -114,8 +94,9 @@ model ProductData {
 
 
 model Category{
-  CategoryId String   @id @default(uuid())  
-  CategoryName String
+  categoryId String   @id @default(uuid())  
+  categoryName String
+  categoryImage String
   isDeleted Boolean @default(false)
   createdAt DateTime @default(now())  
   updatedAt DateTime @updatedAt  

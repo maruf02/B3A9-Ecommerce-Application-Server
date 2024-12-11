@@ -5,8 +5,8 @@ import catchAsync from "../../helpers/cacheAsync";
 import { CategoryService } from "./Category.service";
 
 const createCategory = catchAsync(async (req: Request, res: Response) => {
-  const CategoryData = req.body;
-  const result = await CategoryService.createCategory(CategoryData);
+  const categoryData = req.body;
+  const result = await CategoryService.createCategory(categoryData);
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
@@ -27,8 +27,8 @@ const getAllCategorys = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getCategoryById = catchAsync(async (req: Request, res: Response) => {
-  const { CategoryId } = req.params;
-  const result = await CategoryService.getCategoryById(CategoryId);
+  const { categoryId } = req.params;
+  const result = await CategoryService.getCategoryById(categoryId);
   if (!result || result.isDeleted) {
     sendResponse(res, {
       statusCode: StatusCodes.NOT_FOUND,
@@ -48,9 +48,9 @@ const getCategoryById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateCategory = catchAsync(async (req: Request, res: Response) => {
-  const { CategoryId } = req.params;
+  const { categoryId } = req.params;
   const updateData = req.body;
-  const result = await CategoryService.updateCategory(CategoryId, updateData);
+  const result = await CategoryService.updateCategory(categoryId, updateData);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
