@@ -7,6 +7,7 @@ const router = Router();
 
 router.post("/products", auth(), ProductController.createProduct);
 router.get("/products", ProductController.getAllProducts);
+router.get("/productsS", ProductController.getAllSProducts);
 router.get("/products/:ProductId", ProductController.getProductById);
 router.get(
   "/productsByShopName/email/:email",
@@ -15,6 +16,10 @@ router.get(
 router.get(
   "/productsByShopName/:vendorId",
   ProductController.getAllProductsByVendorId
+);
+router.get(
+  "/productsByShopNameP/:vendorId",
+  ProductController.getAllProductsByVendorIdP
 );
 router.get("/cartProducts/cartItem", ProductController.getProductsByCartIds);
 router.put("/products/:productId", ProductController.updateProduct);

@@ -59,40 +59,6 @@ const createProduct = async (user: any, productData: any) => {
   });
 };
 
-// const getAllProducts = async (query: any) => {
-//   const { page = 1, limit = 10, search = "", category } = query;
-
-//   const offset = (page - 1) * limit;
-
-//   const whereClause: any = {
-//     isDeleted: false,
-//   };
-
-//   if (search) {
-//     whereClause.name = {
-//       contains: search,
-//       mode: "insensitive", // Case-insensitive search
-//     };
-//   }
-
-//   if (category) {
-//     whereClause.category = category;
-//   }
-
-//   const products = await prisma.productData.findMany({
-//     where: whereClause,
-//     skip: offset,
-//     take: Number(limit),
-//     include: { shopName: true },
-//   });
-
-//   const totalProducts = await prisma.productData.count({
-//     where: whereClause,
-//   });
-
-//   return { products, totalProducts };
-// };
-
 const getAllProducts = async (page: number, limit: number) => {
   const offset = (page - 1) * limit;
 
@@ -109,6 +75,11 @@ const getAllProducts = async (page: number, limit: number) => {
 
   return { products, total };
 };
+const getAllSProducts = async () => {
+  const products = await prisma.product.findMany();
+
+  return products;
+};
 
 const getAllProductsByVendorId = async (vendorId: string) => {
   const result = await prisma.product.findMany({
@@ -121,6 +92,31 @@ const getAllProductsByVendorId = async (vendorId: string) => {
     },
   });
   return result;
+};
+const getAllProductsByVendorIdP = async (
+  vendorId: string,
+  page: number,
+  limit: number
+) => {
+  const offset = (page - 1) * limit;
+
+  const total = await prisma.product.count({
+    where: { isDeleted: false, vendorId: vendorId },
+  });
+
+  const result = await prisma.product.findMany({
+    where: {
+      isDeleted: false,
+      vendorId: vendorId, // Filter by vendorId
+    },
+    skip: offset,
+    take: limit,
+    include: {
+      shopName: true, // Include related shopName data if needed
+    },
+  });
+
+  return { result, total };
 };
 
 const getProductById = async (productId: string) => {
@@ -251,4 +247,6 @@ export const ProductService = {
   deleteProduct,
   getAllProductsByVendorId,
   getProductsByCartIds,
+  getAllSProducts,
+  getAllProductsByVendorIdP,
 };

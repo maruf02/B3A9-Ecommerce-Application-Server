@@ -40,6 +40,26 @@ const getAllProducts = catchAsync(async (req: Request, res: Response) => {
     },
   });
 });
+const getAllSProducts = catchAsync(async (req: Request, res: Response) => {
+  const result = await ProductService.getAllSProducts();
+
+  if (!result || result.length === 0) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NOT_FOUND,
+      success: true,
+      message: "No products found for this shop",
+      data: result,
+    });
+
+    return;
+  }
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Products retrieved successfully",
+    data: result,
+  });
+});
 
 const getAllProductsByVendorId = catchAsync(
   async (req: Request, res: Response) => {
@@ -61,6 +81,39 @@ const getAllProductsByVendorId = catchAsync(
       success: true,
       message: "Products retrieved successfully",
       data: result,
+    });
+  }
+);
+const getAllProductsByVendorIdP = catchAsync(
+  async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const { vendorId } = req.params; // Use vendorId from route params
+
+    const result = await ProductService.getAllProductsByVendorIdP(
+      vendorId,
+      page,
+      limit
+    );
+
+    if (!result || result.result.length === 0) {
+      return sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
+        message: "No products found for this shop",
+        data: result.result,
+      });
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Products retrieved successfully",
+      data: result.result,
+      meta: {
+        total: result.total,
+        page,
+        limit,
+      },
     });
   }
 );
@@ -150,7 +203,7 @@ const getProductByShopName = catchAsync(async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({
     success: true,
     message: "Products retrieved successfully",
-    data: result,
+    data: result.result,
     meta: {
       total: result.total,
       page,
@@ -213,4 +266,6 @@ export const ProductController = {
   deleteProduct,
   getAllProductsByVendorId,
   getProductsByCartIds,
+  getAllSProducts,
+  getAllProductsByVendorIdP,
 };
