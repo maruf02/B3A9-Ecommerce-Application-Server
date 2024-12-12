@@ -9,6 +9,9 @@ import { VendorRoutes } from "./app/modules/Vendor/vendor.route";
 import { ProductRoutes } from "./app/modules/products/products.route";
 import { categoriesRoutes } from "./app/modules/Category/Category.route";
 import { loginActivityRoutes } from "./app/modules/loginActivity/loginActivity.route";
+import { orderRoutes } from "./app/modules/OrderData/OrderData.route";
+import { commentRoutes } from "./app/modules/Comment/Comment.route";
+import { replyCommentRoutes } from "./app/modules/ReplyComment/ReplyComment.route";
 // import { bookRoutes } from "./app/modules/Books/books.route";
 // import { memberRoutes } from "./app/modules/members/members.route";
 // import { borrowReturnRoutes } from "./app/modules/BRBooks/BRBooks.route";
@@ -41,6 +44,10 @@ app.use("/api", VendorRoutes);
 app.use("/api", ProductRoutes);
 app.use("/api", categoriesRoutes);
 app.use("/api", loginActivityRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", commentRoutes);
+app.use("/api", replyCommentRoutes);
+
 // app.use("/api", borrowReturnRoutes);
 
 app.get("/", (req: Request, res: Response) => {

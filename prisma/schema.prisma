@@ -30,6 +30,10 @@ model User {
   updatedAt DateTime @updatedAt  
 
 shopName ShopName[]
+order Order[]
+comment Comment[]
+
+
 
   @@map("users")
 }
@@ -58,7 +62,9 @@ model ShopName {
   user      User     @relation(fields: [userId], references: [userId])
 
 product Product[]
-
+order Order[]
+comment Comment[]
+replyComment ReplyComment[]
 
   @@map("shop_name")
 }
@@ -89,6 +95,10 @@ model Product {
 
   shopName      ShopName     @relation(fields: [vendorId], references: [vendorId])
 
+orderItem     OrderItem[]
+comment Comment[]
+replyComment ReplyComment[]
+
   @@map("products_data")
 }
 
@@ -113,4 +123,96 @@ model LoginActivity{
   device String
 
   @@map("Login_activity")
+}
+
+model Order {
+  orderId        String       @id @default(uuid())
+  userId         String
+  userEmail         String
+  vendorId       String
+  vendorEmail       String
+  shopName       String
+  totalItems     Int
+  totalPrice     Float
+  paymentMethod  String
+  status         String       @default("Pending")
+  transactionId  String?      @unique
+  date           DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relations
+  user           User         @relation(fields: [userId], references: [userId])
+  vendor         ShopName     @relation(fields: [vendorId], references: [vendorId])
+  orderItems     OrderItem[]  // Relation to OrderItem
+
+  @@map("orders")
+}
+
+model OrderItem {
+  orderItemId    String   @id @default(uuid())
+  orderId        String
+  userEmail        String
+  vendorEmail        String
+  productId      String
+  name           String
+  requiredQty    Int
+  price          Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  order          Order    @relation(fields: [orderId], references: [orderId])
+  product        Product  @relation(fields: [productId], references: [productId])
+
+  @@map("order_items")
+}
+
+
+
+model Comment {
+  commentId  String      @id  @default(uuid())
+  userId    String
+  userEmail String
+  userName  String
+  productId String
+  vendorId  String
+  comment   String
+  rating    Int
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [userId])
+  product  Product @relation(fields: [productId], references: [productId])
+  vendor   ShopName  @relation(fields: [vendorId], references: [vendorId])
+
+replyComment ReplyComment[]
+
+
+  @@map("comment")
+}
+
+
+
+model ReplyComment {
+  replyCommentId String      @id @default(uuid())
+  commentId      String
+  userId         String
+  userEmail      String
+  userName       String
+  productId      String
+  vendorId       String
+  vendorEmail    String
+  shopName       String
+  repliesComment String
+  isDeleted      Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  comment        Comment     @relation(fields: [commentId], references: [commentId])
+  product        Product     @relation(fields: [productId], references: [productId])
+  vendor         ShopName    @relation(fields: [vendorId], references: [vendorId])
+
+  @@map("reply_comment")
 }
