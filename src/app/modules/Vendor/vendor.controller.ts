@@ -31,8 +31,8 @@ const getAllVendors = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getVendorById = catchAsync(async (req: Request, res: Response) => {
-  const { VendorId } = req.params;
-  const result = await VendorService.getVendorById(VendorId);
+  const { vendorId } = req.params;
+  const result = await VendorService.getVendorById(vendorId);
   if (!result || result.isDeleted) {
     sendResponse(res, {
       statusCode: StatusCodes.NOT_FOUND,

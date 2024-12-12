@@ -1,4 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { initiatePayment, paymentVerify } from "./payment.utils";
+import AppError from "../../helpers/AppError";
+import { StatusCodes } from "http-status-codes";
 
 const prisma = new PrismaClient();
 
@@ -13,10 +16,22 @@ const createOrder = async (orderData: any) => {
     totalPrice,
     paymentMethod,
     status,
-    transactionId,
     orderItems,
   } = orderData;
 
+  // payment option
+  const generateTransactionId = () => {
+    const timestamp = Date.now();
+    const randomPart = Math.random().toString(36).substring(2, 15);
+    return `${timestamp}-${randomPart}`;
+  };
+
+  const transactionId = generateTransactionId();
+  // payment option
+  const paymentData = {
+    orderData,
+    transactionId,
+  };
   // Create the Order with OrderItems
   const result = await prisma.order.create({
     data: {
@@ -27,7 +42,7 @@ const createOrder = async (orderData: any) => {
       shopName,
       totalItems,
       totalPrice,
-      paymentMethod,
+      paymentMethod: "Pending",
       status,
       transactionId,
       orderItems: {
@@ -44,7 +59,51 @@ const createOrder = async (orderData: any) => {
     include: { orderItems: true },
   });
 
-  return result;
+  if (!result) {
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      "Failed to create payment record."
+    );
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { userId },
+  });
+  const paymentSession = await initiatePayment({
+    transactionId,
+    name: user?.name,
+    email: user?.email,
+    phone: user?.phone,
+    address: user?.address,
+    totalPrice,
+  });
+
+  return paymentSession;
+};
+
+const confirmationService = async (transactionId: string) => {
+  // Step 1: Verify payment using an external service
+  const verifyResponse = await paymentVerify(transactionId);
+  console.log("verifyResponse", verifyResponse);
+  console.log("verifyResponsePaymentType", verifyResponse.payment_type);
+
+  // Step 2: Find the payment in the database using Prisma
+  const payment = await prisma.order.findUnique({
+    where: { transactionId }, // Assuming 'transactionId' is unique
+  });
+
+  console.log("paymentInfo", payment);
+  // Step 3: Handle case where payment is not found
+  if (!payment) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Payment record not found");
+  }
+  await prisma.order.update({
+    where: { transactionId },
+    data: { paymentMethod: verifyResponse.payment_type },
+  });
+
+  // Return the payment details if found
+  return payment;
 };
 
 const getAllOrders = async () => {
@@ -137,4 +196,5 @@ export const OrderService = {
   getOrdersByVendorEmail,
   getOrderProductByUserEmail,
   getOrderProductByVendorEmail,
+  confirmationService,
 };

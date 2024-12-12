@@ -4,7 +4,9 @@ import { OrderController } from "./OrderData.controller";
 
 const router = Router();
 
-router.post("/orders", auth(), OrderController.createOrder);
+router.post("/orders", OrderController.createOrder);
+router.post("/confirmation", OrderController.confirmationController);
+router.post("/failure", OrderController.failureController);
 router.get("/orders", OrderController.getAllOrders);
 router.get("/orders/:orderId", OrderController.getOrderById);
 router.get("/ordersByUserEmail/:email", OrderController.getOrdersByUserEmail);
