@@ -164,26 +164,50 @@ const getOrdersByVendorEmail = async (email: string) => {
   });
 };
 
-const getOrderProductByUserEmail = async (email: string) => {
-  return await prisma.orderItem.findMany({
+const getOrderProductByUserEmail = async (
+  email: string,
+  page: number,
+  limit: number
+) => {
+  const offset = (page - 1) * limit;
+
+  const total = await prisma.orderItem.count({
+    where: { userEmail: email },
+  });
+  const result = await prisma.orderItem.findMany({
     where: {
       userEmail: email, // Filter by userEmail
     },
+    skip: offset,
+    take: limit,
     include: {
       product: true,
     },
   });
+  return { result, total };
 };
 
-const getOrderProductByVendorEmail = async (email: string) => {
-  return await prisma.orderItem.findMany({
+const getOrderProductByVendorEmail = async (
+  email: string,
+  page: number,
+  limit: number
+) => {
+  const offset = (page - 1) * limit;
+
+  const total = await prisma.orderItem.count({
+    where: { vendorEmail: email },
+  });
+  const result = await prisma.orderItem.findMany({
     where: {
       vendorEmail: email, // Filter by userEmail
     },
+    skip: offset,
+    take: limit,
     include: {
       product: true,
     },
   });
+  return { result, total };
 };
 
 export const OrderService = {

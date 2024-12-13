@@ -12,6 +12,7 @@ import { loginActivityRoutes } from "./app/modules/loginActivity/loginActivity.r
 import { orderRoutes } from "./app/modules/OrderData/OrderData.route";
 import { commentRoutes } from "./app/modules/Comment/Comment.route";
 import { replyCommentRoutes } from "./app/modules/ReplyComment/ReplyComment.route";
+import { followShopRoutes } from "./app/modules/FollowShop/FollowShop.route";
 // import { bookRoutes } from "./app/modules/Books/books.route";
 // import { memberRoutes } from "./app/modules/members/members.route";
 // import { borrowReturnRoutes } from "./app/modules/BRBooks/BRBooks.route";
@@ -47,6 +48,7 @@ app.use("/api", loginActivityRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", replyCommentRoutes);
+app.use("/api", followShopRoutes);
 
 // app.use("/api", borrowReturnRoutes);
 

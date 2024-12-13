@@ -257,6 +257,30 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllFlashSaleProducts = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await ProductService.getAllFlashSaleProducts();
+
+    if (!result || result.length === 0) {
+      sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
+        message: "No flash sale products found",
+        data: result,
+      });
+
+      return;
+    }
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Flash sale products retrieved successfully",
+      data: result,
+    });
+  }
+);
+
 export const ProductController = {
   createProduct,
   getAllProducts,
@@ -268,4 +292,5 @@ export const ProductController = {
   getProductsByCartIds,
   getAllSProducts,
   getAllProductsByVendorIdP,
+  getAllFlashSaleProducts,
 };

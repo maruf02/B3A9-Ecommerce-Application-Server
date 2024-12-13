@@ -238,6 +238,16 @@ const deleteProduct = async (productId: string) => {
   });
 };
 
+const getAllFlashSaleProducts = async () => {
+  const products = await prisma.product.findMany({
+    where: {
+      isFlashSale: "Yes",
+    },
+  });
+
+  return products;
+};
+
 export const ProductService = {
   createProduct,
   getAllProducts,
@@ -249,4 +259,5 @@ export const ProductService = {
   getProductsByCartIds,
   getAllSProducts,
   getAllProductsByVendorIdP,
+  getAllFlashSaleProducts,
 };

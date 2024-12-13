@@ -163,28 +163,66 @@ const getOrdersByVendorEmail = catchAsync(
 
 const getOrderProductsByUserEmail = catchAsync(
   async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
     const { email } = req.params;
-    const result = await OrderService.getOrderProductByUserEmail(email);
+    const result = await OrderService.getOrderProductByUserEmail(
+      email,
+      page,
+      limit
+    );
 
-    sendResponse(res, {
-      statusCode: StatusCodes.OK,
+    if (!result || result.result.length === 0) {
+      return sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
+        message: "No products found for this shop",
+        data: result.result,
+      });
+    }
+
+    res.status(StatusCodes.OK).json({
       success: true,
-      message: "Order items retrieved successfully by user email",
-      data: result,
+      message: "Products retrieved successfully",
+      data: result.result,
+      meta: {
+        total: result.total,
+        page,
+        limit,
+      },
     });
   }
 );
 
 const getOrderProductsByVendorEmail = catchAsync(
   async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
     const { email } = req.params;
-    const result = await OrderService.getOrderProductByVendorEmail(email);
+    const result = await OrderService.getOrderProductByVendorEmail(
+      email,
+      page,
+      limit
+    );
 
-    sendResponse(res, {
-      statusCode: StatusCodes.OK,
+    if (!result || result.result.length === 0) {
+      return sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
+        message: "No products found for this shop",
+        data: result.result,
+      });
+    }
+
+    res.status(StatusCodes.OK).json({
       success: true,
-      message: "Order items retrieved successfully by user email",
-      data: result,
+      message: "Products retrieved successfully",
+      data: result.result,
+      meta: {
+        total: result.total,
+        page,
+        limit,
+      },
     });
   }
 );

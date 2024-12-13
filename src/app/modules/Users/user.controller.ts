@@ -92,6 +92,17 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
     data: null,
   });
 });
+const followShop = catchAsync(async (req: Request, res: Response) => {
+  const { userId, vendorId } = req.params;
+  await userService.followShop(userId, vendorId);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "User successfully deleted",
+    data: null,
+  });
+});
 
 export const userController = {
   createUser,
@@ -100,4 +111,5 @@ export const userController = {
   getUserByEmail,
   updateUser,
   deleteUser,
+  followShop,
 };

@@ -77,6 +77,12 @@ const deleteUser = async (userId: string) => {
     data: { isDeleted: true },
   });
 };
+const followShop = async (userId: string, vendorId: string) => {
+  return await prisma.user.update({
+    where: { userId },
+    data: { isDeleted: true },
+  });
+};
 
 export const userService = {
   createUser,
@@ -85,4 +91,5 @@ export const userService = {
   getUserByEmail,
   updateUser,
   deleteUser,
+  followShop,
 };
