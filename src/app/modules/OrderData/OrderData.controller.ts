@@ -79,12 +79,31 @@ const failureController = catchAsyncP(async (req: Request, res: Response) => {
 });
 
 const getAllOrders = catchAsync(async (req: Request, res: Response) => {
-  const result = await OrderService.getAllOrders();
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+
+  // Call the service layer to fetch orders
+  const result = await OrderService.getAllOrders(page, limit);
+
+  if (!result || result.result.length === 0) {
+    return sendResponse(res, {
+      statusCode: StatusCodes.NOT_FOUND,
+      success: false,
+      message: "No orders found",
+      data: [],
+    });
+  }
+
+  // Send successful response
+  res.status(StatusCodes.OK).json({
     success: true,
-    message: "Orders retrieved successfully",
-    data: result,
+    message: "Products retrieved successfully",
+    data: result.result,
+    meta: {
+      total: result.total,
+      page,
+      limit,
+    },
   });
 });
 

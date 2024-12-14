@@ -75,6 +75,7 @@ const getAllProducts = async (page: number, limit: number) => {
 
   return { products, total };
 };
+
 const getAllSProducts = async () => {
   const products = await prisma.product.findMany();
 
@@ -248,6 +249,18 @@ const getAllFlashSaleProducts = async () => {
   return products;
 };
 
+const getAllProductsByCategory = async (category: string) => {
+  const products = await prisma.product.findMany({
+    where: {
+      isDeleted: false,
+      category: category,
+    },
+    include: { shopName: true },
+  });
+
+  return products;
+};
+
 export const ProductService = {
   createProduct,
   getAllProducts,
@@ -260,4 +273,5 @@ export const ProductService = {
   getAllSProducts,
   getAllProductsByVendorIdP,
   getAllFlashSaleProducts,
+  getAllProductsByCategory,
 };

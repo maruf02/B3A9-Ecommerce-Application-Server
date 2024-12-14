@@ -35,7 +35,7 @@ const createLoginActivity = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllLoginActivities = catchAsync(
-  async (_req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     try {
       const result = await loginActivityServices.getAllLoginActivities();
 

@@ -106,13 +106,28 @@ const confirmationService = async (transactionId: string) => {
   return payment;
 };
 
-const getAllOrders = async () => {
-  return await prisma.order.findMany({
-    where: { status: { not: "Deleted" } },
-    include: { orderItems: true, user: true, vendor: true },
-  });
-};
+const getAllOrders = async (page: number, limit: number) => {
+  const offset = (page - 1) * limit;
 
+  // Fetch the total count of orders
+  const total = await prisma.order.count({
+    where: { status: { not: "Deleted" } },
+  });
+
+  // Fetch paginated orders with required relations
+  const result = await prisma.order.findMany({
+    where: { status: { not: "Deleted" } },
+    skip: offset,
+    take: limit,
+    include: {
+      orderItems: true,
+      user: true,
+      vendor: true,
+    },
+  });
+
+  return { result, total };
+};
 const getOrderById = async (orderId: string) => {
   return await prisma.order.findUnique({
     where: { orderId },

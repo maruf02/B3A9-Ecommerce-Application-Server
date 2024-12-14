@@ -281,6 +281,31 @@ const getAllFlashSaleProducts = catchAsync(
   }
 );
 
+const getAllProductsByCategory = catchAsync(
+  async (req: Request, res: Response) => {
+    const { category } = req.params; // Use category from route params
+
+    const result = await ProductService.getAllProductsByCategory(category);
+
+    if (!result || result.length === 0) {
+      sendResponse(res, {
+        statusCode: StatusCodes.NOT_FOUND,
+        success: true,
+        message: "No products found for this category",
+        data: result,
+      });
+
+      return;
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: `Products retrieved for category: ${category}`,
+      data: result,
+    });
+  }
+);
+
 export const ProductController = {
   createProduct,
   getAllProducts,
@@ -293,4 +318,5 @@ export const ProductController = {
   getAllSProducts,
   getAllProductsByVendorIdP,
   getAllFlashSaleProducts,
+  getAllProductsByCategory,
 };
