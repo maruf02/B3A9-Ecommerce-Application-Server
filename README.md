@@ -6,13 +6,13 @@
 
 # Credential:
 
-# ADMIN credential:- user: admin@admin.com, pass: admin1234
+## ADMIN credential:- user: admin@admin.com, pass: admin1234
 
-# VENDOR1 credential:- user: mkv@mk.com, pass: mkv
+### VENDOR1 credential:- user: mkv@mk.com, pass: mkv
 
-# VENDOR2 credential:- user: mkv2@mk.com, pass: mkv
+### VENDOR2 credential:- user: mkv2@mk.com, pass: mkv
 
-# USER credential:- user: mku@mk.com, pass: mku
+### USER credential:- user: mku@mk.com, pass: mku
 
 ## Introduction
 
