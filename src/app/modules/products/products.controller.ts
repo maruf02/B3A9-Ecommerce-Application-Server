@@ -11,7 +11,7 @@ const createProduct = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
     const ProductData = req.body;
     const user = req.user;
-    console.log(ProductData);
+    console.log(user);
     const result = await ProductService.createProduct(user, ProductData);
 
     sendResponse(res, {
@@ -191,7 +191,8 @@ const getProductByShopName = catchAsync(async (req: Request, res: Response) => {
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const { email } = req.params;
   const result = await ProductService.getProductByEmail(email, page, limit);
-  if (!result || result.isDeleted) {
+  // if (!result || result.isDeleted) {
+  if (!result) {
     sendResponse(res, {
       statusCode: StatusCodes.NOT_FOUND,
       success: true,

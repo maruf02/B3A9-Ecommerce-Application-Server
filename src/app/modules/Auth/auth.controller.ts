@@ -3,6 +3,7 @@ import { AuthServices } from "./auth.service";
 import sendResponse from "../../helpers/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../helpers/cacheAsync";
+import AppError from "../../helpers/AppError";
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   try {
@@ -88,8 +89,50 @@ const changePassword = catchAsync(
     }
   }
 );
+const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+  await AuthServices.forgotPassword(req.body);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Check your email!",
+    data: null,
+  });
+});
+
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+  // const { password } = req.body;
+  // const { token, userId } = req.query;
+  // uporer gula postman er jonno
+
+  const { token, userId, password } = req.body;
+
+  console.log(token, userId, password);
+  console.log("userId", password);
+  if (!userId || !token || !password) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Missing required fields!");
+  }
+
+  await AuthServices.resetPassword({
+    token,
+    userId: userId as string, // Cast userId to string
+    password,
+  });
+  // const token = req.headers.authorization || "";
+
+  // await AuthServices.resetPassword(req.body);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Password Reset!",
+    data: null,
+  });
+});
 
 export const AuthController = {
   loginUser,
   changePassword,
+  forgotPassword,
+  resetPassword,
 };

@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.orderRoutes = void 0;
+const express_1 = require("express");
+const OrderData_controller_1 = require("./OrderData.controller");
+const router = (0, express_1.Router)();
+router.post("/orders", OrderData_controller_1.OrderController.createOrder);
+router.post("/confirmation", OrderData_controller_1.OrderController.confirmationController);
+router.post("/failure", OrderData_controller_1.OrderController.failureController);
+router.get("/orders", OrderData_controller_1.OrderController.getAllOrders);
+router.get("/orders/:orderId", OrderData_controller_1.OrderController.getOrderById);
+router.get("/ordersByUserEmail/:email", OrderData_controller_1.OrderController.getOrdersByUserEmail);
+router.get("/ordersByVendorEmail/:email", OrderData_controller_1.OrderController.getOrdersByVendorEmail);
+router.get("/ordersProductByUserEmail/:email", OrderData_controller_1.OrderController.getOrderProductsByUserEmail);
+router.get("/ordersProductByVendorEmail/:email", OrderData_controller_1.OrderController.getOrderProductsByVendorEmail);
+router.put("/orders/:orderId", OrderData_controller_1.OrderController.updateOrder);
+router.delete("/orders/:orderId", OrderData_controller_1.OrderController.deleteOrder);
+exports.orderRoutes = router;

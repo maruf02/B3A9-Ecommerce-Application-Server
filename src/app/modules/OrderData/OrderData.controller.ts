@@ -3,7 +3,6 @@ import sendResponse from "../../helpers/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../helpers/cacheAsync";
 import { OrderService } from "./OrderData.service";
-import catchAsyncP from "../../helpers/cacheAsyncP";
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   const orderData = req.body;
@@ -23,14 +22,16 @@ const confirmationController = catchAsync(
     const { transactionId } = req.query;
 
     // Ensure transactionId is a string, since query parameters are always strings by default
+    // if (typeof transactionId !== "string") {
+    //   return res.status(StatusCodes.BAD_REQUEST).send("Invalid transaction ID");
+    // }
     if (typeof transactionId !== "string") {
-      return res.status(StatusCodes.BAD_REQUEST).send("Invalid transaction ID");
+      res.status(StatusCodes.BAD_REQUEST).send("Invalid transaction ID");
+      return;
     }
 
-    // Call the confirmation service to process the payment
     const result = await OrderService.confirmationService(transactionId);
 
-    // Return the success response as HTML
     res.send(`
       <html>
         <head>
@@ -51,11 +52,15 @@ const confirmationController = catchAsync(
   }
 );
 
-const failureController = catchAsyncP(async (req: Request, res: Response) => {
+const failureController = catchAsync(async (req: Request, res: Response) => {
   const { transactionId } = req.query;
 
+  // if (typeof transactionId !== "string") {
+  //   return res.status(StatusCodes.BAD_REQUEST).send("Invalid transaction ID");
+  // }
   if (typeof transactionId !== "string") {
-    return res.status(StatusCodes.BAD_REQUEST).send("Invalid transaction ID");
+    res.status(StatusCodes.BAD_REQUEST).send("Invalid transaction ID");
+    return; // Explicit return to prevent further execution
   }
 
   // Assuming there's logic to handle failure (this needs to be implemented)
@@ -72,7 +77,7 @@ const failureController = catchAsyncP(async (req: Request, res: Response) => {
         <body>
           <h1>Payment Failed</h1>
           <p>Unfortunately, your payment could not be processed. Please try again later.</p>
-          <a href="https://techx-client.vercel.app">Back to Payment Management</a>
+          <a href="http://localhost:5173/checkout">Back to Payment Management</a>
         </body>
       </html>
     `);
