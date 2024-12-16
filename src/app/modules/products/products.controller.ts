@@ -247,8 +247,8 @@ const updateProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteProduct = catchAsync(async (req: Request, res: Response) => {
-  const { ProductId } = req.params;
-  await ProductService.deleteProduct(ProductId);
+  const { productId } = req.params;
+  await ProductService.deleteProduct(productId);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
