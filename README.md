@@ -1,33 +1,60 @@
-# Library Management System
+# PeraCommerce e-Commerce website
 
-# Live(Backend):- https://b3-a8-library-management-server-prisma.vercel.app/
+# Live Link:- https://peracommerce.vercel.app/
+
+# Live(Backend):- https://peracomerce.vercel.app/
+
+# Credential:
+
+# ADMIN credential:- user: admin@admin.com, pass: admin1234
+
+# VENDOR1 credential:- user: mkv@mk.com, pass: mkv
+
+# VENDOR2 credential:- user: mkv2@mk.com, pass: mkv
+
+# USER credential:- user: mku@mk.com, pass: mku
 
 ## Introduction
 
-This is Library management system project. This is a little management type project. This project very small only for backend but you can get vibe of little library management system with Prisma and expressLS.
+This is PeraCommerce e-Commerce website. This is a little e-commerce management type project. This project very small only for backend but you can get vibe of little library management system with Prisma and expressLS.
 
 ## Project Description
 
-This is Library management system project. This is a little management type project. This project very small but you can get vibe of little Management system, Prisma ans expressJS. The purpose of this project create a vibe of fast performance that manage db in Prisma ORM that is postgreSql with expressJS technology with API.
+This is PeraCommerce e-Commerce website project. This is a little e-Commerce management type project. This project very small but you can get vibe of little e-Commerce Management system, Prisma and expressJS. The purpose of this project create a vibe of fast performance that manage db in Prisma ORM that is postgreSql with expressJS technology with API.
 
 ## Features
 
-- Api for Create books
-- Api for get all books
-- Api for get books by book ID
-- Api for update book by book ID
-- Api for Delete book by book ID
-- Api for Create member
-- Api for get all members
-- Api for get members by member ID
-- Api for update members by member ID
-- Api for Delete members by member ID
-- Api for borrow book
-- Api for return book
-- Api for get all borrow book
-- Api for get all overdue book
+### Admin:
+
+- admin can create, block, update user and vendor
+- admin can manage all operation
+- admin can manage all transaction for selling item
+
+### Vendor
+
+- Vendor can create their shp name and shop details
+- vendor can add their product and manage inventory
+- vendor can see their sales product
+- vendor can reply customer comment
+
+### User
+
+- user can add product their card
+- they can purchase their card product
+- they can payment price using by amaarPay secure payment system
+- they can see their recent viewed product
+- they can buy product shop wise
+
+### and many other features
 
 ## Technology Stack
+
+- Frontend:
+
+  - React
+  - Redux
+  - TypeScript
+  - nodemailer
 
 - Backend:
   - Node js
