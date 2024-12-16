@@ -26,7 +26,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://b3-a9-peracommerce-client.vercel.app",
+      "https://peracommerce.vercel.app",
       "*",
     ],
     credentials: true,

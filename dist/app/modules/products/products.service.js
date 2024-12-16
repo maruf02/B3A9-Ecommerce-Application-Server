@@ -18,7 +18,7 @@ const AppError_1 = __importDefault(require("../../helpers/AppError"));
 const http_status_codes_1 = require("http-status-codes");
 const prisma = new client_1.PrismaClient();
 const createProduct = (user, productData) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, price, category, description, quantity, rating, mimage, image2, image3, image4, image5, discount, discountPrice, isFlashSale, } = productData;
+    const { name, price, category, description, quantity, mimage, image2, image3, image4, image5, discount, discountPrice, isFlashSale, } = productData;
     const { email } = user;
     const shop = yield prisma.shopName.findUnique({
         where: { email },
@@ -35,7 +35,6 @@ const createProduct = (user, productData) => __awaiter(void 0, void 0, void 0, f
             email,
             name,
             price,
-            rating,
             category,
             description,
             quantity,

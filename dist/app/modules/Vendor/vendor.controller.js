@@ -88,8 +88,8 @@ const updateVendor = (0, cacheAsync_1.default)((req, res) => __awaiter(void 0, v
     });
 }));
 const deleteVendor = (0, cacheAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { VendorId } = req.params;
-    yield vendor_service_1.VendorService.deleteVendor(VendorId);
+    const { vendorId } = req.params;
+    yield vendor_service_1.VendorService.deleteVendor(vendorId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,

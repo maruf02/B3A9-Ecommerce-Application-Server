@@ -22,7 +22,7 @@ const prisma = new client_1.PrismaClient();
 const createProduct = (0, cacheAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const ProductData = req.body;
     const user = req.user;
-    console.log(ProductData);
+    console.log(user);
     const result = yield products_service_1.ProductService.createProduct(user, ProductData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.CREATED,

@@ -85,8 +85,8 @@ const updateVendor = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteVendor = catchAsync(async (req: Request, res: Response) => {
-  const { VendorId } = req.params;
-  await VendorService.deleteVendor(VendorId);
+  const { vendorId } = req.params;
+  await VendorService.deleteVendor(vendorId);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

@@ -53,7 +53,7 @@ const confirmationController = (0, cacheAsync_1.default)((req, res) => __awaiter
         <body>
           <h1>Payment Successful</h1>
           <p>Your payment has been successfully processed.</p>
-          <a href="https://b3-a9-peracommerce-client.vercel.app/commentPage">Back to Payment Management</a>
+          <a href="https://peracommerce.vercel.app/commentPage">Back to Payment Management</a>
         </body>
       </html>
     `);
@@ -81,7 +81,7 @@ const failureController = (0, cacheAsync_1.default)((req, res) => __awaiter(void
         <body>
           <h1>Payment Failed</h1>
           <p>Unfortunately, your payment could not be processed. Please try again later.</p>
-          <a href="https://b3-a9-peracommerce-client.vercel.app/">Back to Payment Management</a>
+          <a href="https://peracommerce.vercel.app/checkout">Back to Payment Management</a>
         </body>
       </html>
     `);
