@@ -31,12 +31,38 @@ const createVendor = async (user: any, vendorData: any) => {
   });
 };
 
+// const getAllVendors = async () => {
+//   const result = await prisma.shopName.findMany({
+//     where: { isDeleted: false },
+//     include: { user: true },
+//   });
+//   return result;
+// };
 const getAllVendors = async () => {
-  const result = await prisma.shopName.findMany({
+  // Fetch all vendors
+  const vendors = await prisma.shopName.findMany({
     where: { isDeleted: false },
-    include: { user: true },
+    include: { user: true }, // Include associated user details
   });
-  return result;
+
+  // Map through vendors and fetch product counts
+  const vendorsWithProductCounts = await Promise.all(
+    vendors.map(async (vendor) => {
+      const productCount = await prisma.product.count({
+        where: {
+          vendorId: vendor.vendorId, // Count products by matching vendorId
+          isDeleted: false, // Only count non-deleted products
+        },
+      });
+
+      return {
+        ...vendor,
+        productCount, // Add the product count to the vendor data
+      };
+    })
+  );
+
+  return vendorsWithProductCounts;
 };
 
 const getVendorById = async (vendorId: string) => {

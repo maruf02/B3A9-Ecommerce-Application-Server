@@ -13,6 +13,8 @@ import { orderRoutes } from "./app/modules/OrderData/OrderData.route";
 import { commentRoutes } from "./app/modules/Comment/Comment.route";
 import { replyCommentRoutes } from "./app/modules/ReplyComment/ReplyComment.route";
 import { followShopRoutes } from "./app/modules/FollowShop/FollowShop.route";
+import { couponRoutes } from "./app/modules/Coupon/Coupon.route";
+import { EmailRoutes } from "./app/modules/Email/Email.route";
 // import { bookRoutes } from "./app/modules/Books/books.route";
 // import { memberRoutes } from "./app/modules/members/members.route";
 // import { borrowReturnRoutes } from "./app/modules/BRBooks/BRBooks.route";
@@ -49,6 +51,8 @@ app.use("/api", orderRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", replyCommentRoutes);
 app.use("/api", followShopRoutes);
+app.use("/api", couponRoutes);
+app.use("/api", EmailRoutes);
 
 // app.use("/api", borrowReturnRoutes);
 

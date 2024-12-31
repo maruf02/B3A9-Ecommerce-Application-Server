@@ -225,8 +225,8 @@ const updateProduct = (0, cacheAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 const deleteProduct = (0, cacheAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { ProductId } = req.params;
-    yield products_service_1.ProductService.deleteProduct(ProductId);
+    const { productId } = req.params;
+    yield products_service_1.ProductService.deleteProduct(productId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
